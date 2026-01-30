@@ -2,95 +2,141 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Expo Android APK Build Documentation</title>
+  <title>Expo Android APK Build Guide</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
+    :root {
+      --bg: #f9fafb;
+
+      --blue: #2563eb;
+      --blue-soft: #dbeafe;
+
+      --pink: #ec4899;
+      --pink-soft: #fce7f3;
+
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+
+      --text: #1f2937;
+      --muted: #6b7280;
+
+      --code-bg: #0f172a;
+      --code-text: #4ade80;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f7f7f7;
       margin: 0;
-      padding: 0;
-      color: #333;
-      line-height: 1.6;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
     }
 
     header {
-      background: #1e1e1e;
+      background: linear-gradient(135deg, var(--blue), var(--pink));
       color: #fff;
-      padding: 20px;
+      padding: 56px 20px;
       text-align: center;
     }
 
+    header h1 {
+      margin: 0;
+      font-size: 2.4rem;
+    }
+
+    header p {
+      margin-top: 8px;
+      opacity: 0.9;
+    }
+
     main {
-      max-width: 900px;
-      margin: auto;
-      padding: 20px;
+      max-width: 980px;
+      margin: -40px auto 48px;
+      padding: 40px;
       background: #ffffff;
-    }
-
-    h1, h2, h3 {
-      color: #4dbeff;
-      margin-top: 30px;
-    }
-
-    h1 {
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 10px;
+      border-radius: 18px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.08);
     }
 
     h2 {
-      border-left: 4px solid #007acc;
-      padding-left: 10px;
+      margin-top: 52px;
+      padding-left: 14px;
+      border-left: 5px solid var(--blue);
+      color: var(--blue);
     }
 
-    pre {
-      background: #111;
-      color: #00ffcc;
-      padding: 15px;
-      overflow-x: auto;
-      border-radius: 6px;
-    }
-
-    code {
-      color: #60daff;
+    h3 {
+      margin-top: 32px;
+      color: var(--pink);
     }
 
     ul {
-      margin-left: 20px;
+      padding-left: 24px;
     }
 
     li {
       margin-bottom: 8px;
     }
 
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin: 16px 0;
+      font-size: 0.95rem;
+    }
+
+    code {
+      color: #86efac;
+      font-family: Consolas, monospace;
+    }
+
+    .note, .warning, .problem {
+      padding: 18px;
+      border-radius: 10px;
+      margin: 22px 0;
+    }
+
     .note {
-      background: #eef6ff;
-      border-left: 4px solid #007acc;
-      padding: 12px;
-      margin: 15px 0;
+      background: var(--green-soft);
+      border-left: 5px solid var(--green);
     }
 
     .warning {
-      background: #fff4e5;
-      border-left: 4px solid #92ceff;
-      padding: 12px;
-      margin: 15px 0;
+      background: var(--pink-soft);
+      border-left: 5px solid var(--pink);
     }
 
     .problem {
-      background: #fdecea;
-      border-left: 4px solid #f44336;
-      padding: 12px;
-      margin: 15px 0;
+      background: #fee2e2;
+      border-left: 5px solid #dc2626;
     }
 
     footer {
       text-align: center;
-      padding: 15px;
-      background: #1e1e1e;
-      color: #aaa;
-      margin-top: 40px;
+      padding: 28px 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    footer a {
+      color: var(--blue);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      main { padding: 26px; }
+      header h1 { font-size: 1.9rem; }
     }
   </style>
 </head>
@@ -104,55 +150,46 @@
 
 <main>
 
-  <!-- INTRODUCTION -->
-  <h2>1. Introduction</h2>
-  <p>
-    To build an Android APK for an Expo project, you must use
-    <strong>EAS Build (Expo Application Services)</strong>.
-  </p>
+<h2>1. Introduction</h2>
+<p>To build an Android APK for an Expo project, you must use EAS Build (Expo Application Services).</p>
 
-  <div class="warning">
-    The old <code>expo build</code> command has been <strong>deprecated</strong> and is no longer supported.
-  </div>
+<div class="warning">
+  The old <code>expo build</code> command has been deprecated and is no longer supported.
+</div>
 
-  <p>
-    EAS Build is the official solution to generate:
-  </p>
-  <ul>
-    <li>APK (for testing and internal sharing)</li>
-    <li>AAB (for Google Play Store submission)</li>
-  </ul>
-  <p>
-    Windows users may need to set the following environment variable to avoid OpenSSL errors:
-  </p>
-  <pre><code>setx NODE_OPTIONS "--openssl-legacy-provider"</code></pre>
+<p>EAS Build is the official solution to generate:</p>
+<ul>
+  <li>APK (for testing and internal sharing)</li>
+  <li>AAB (for Google Play Store submission)</li>
+</ul>
 
-  <!-- PREREQUISITES -->
-  <h2>2. Prerequisites</h2>
-  <ul>
-    <li>Expo account</li>
-    <li>Node.js installed</li>
-    <li>EAS CLI installed globally</li>
-    <li>Terminal opened in Expo project root</li>
-  </ul>
+<p>Windows users may need to set the following environment variable to avoid OpenSSL errors:</p>
+<pre><code>setx NODE_OPTIONS "--openssl-legacy-provider"</code></pre>
 
-  <pre><code>npm install -g eas-cli</code></pre>
+<h2>2. Prerequisites</h2>
+<ul>
+  <li>Expo account</li>
+  <li>Node.js installed</li>
+  <li>EAS CLI installed globally</li>
+  <li>Terminal opened in Expo project root</li>
+</ul>
 
-  <!-- STEP BY STEP -->
-  <h2>3. Step-by-Step Process to Create APK</h2>
+<pre><code>npm install -g eas-cli</code></pre>
 
-  <h3>Step 1: Login to Expo</h3>
-  <pre><code>eas login</code></pre>
+<h2>3. Step-by-Step Process to Create APK</h2>
 
-  <h3>Step 2: Configure EAS Build</h3>
-  <pre><code>eas build:configure</code></pre>
+<h3>Step 1: Login to Expo</h3>
+<pre><code>eas login</code></pre>
 
-  <div class="note">
-    Select <strong>Android</strong> when prompted. This creates an <code>eas.json</code> file.
-  </div>
+<h3>Step 2: Configure EAS Build</h3>
+<pre><code>eas build:configure</code></pre>
 
-  <h3>Step 3: Configure eas.json for APK</h3>
-  <pre><code>{
+<div class="note">
+  Select Android when prompted. This creates an <code>eas.json</code> file.
+</div>
+
+<h3>Step 3: Configure eas.json for APK</h3>
+<pre><code>{
   "build": {
     "development": {
       "developmentClient": true,
@@ -171,20 +208,17 @@
   }
 }</code></pre>
 
-  <h3>Step 5: Change App Name</h3>
-  <p>
-    To change the app name in a React Native Expo project and generate a new APK,
-    update the Expo configuration file. In the <strong>Managed workflow</strong>,
-    Expo automatically applies these changes during the next build.
-  </p>
+<h3>Step 5: Change App Name</h3>
+<p>
+To change the app name in a React Native Expo project and generate a new APK,
+update the Expo configuration file. In the Managed workflow, Expo automatically
+applies these changes during the next build.
+</p>
 
-  <p><strong>Update Configuration</strong></p>
-  <p>
-    Open <code>app.json</code> (or <code>app.config.js</code>) and update the
-    <code>name</code> property.
-  </p>
+<p><strong>Update Configuration</strong></p>
+<p>Open <code>app.json</code> (or <code>app.config.js</code>) and update the name property.</p>
 
-  <pre><code>{
+<pre><code>{
   "expo": {
     "name": "New App Name",
     "slug": "your-app-slug",
@@ -195,22 +229,19 @@
   }
 }</code></pre>
 
-  <div class="warning">
-    <strong>Important Note:</strong> Changing the
-    <code>android.package</code> value creates a completely new app on the
-    device or Play Store.  
-    If you only want to change the visible app name under the icon,
-    update only the <code>name</code> field.
-  </div>
+<div class="warning">
+  Important Note: Changing the <code>android.package</code> value creates a completely new app.
+  If you only want to change the visible app name under the icon, update only the <code>name</code> field.
+</div>
 
-  <h3>Step 6: Change App Logo / Icon</h3>
-  <p>
-    For a React Native Expo project in 2026, the recommended app icon size is
-    <strong>1024 × 1024 pixels</strong>. Expo uses this high-resolution image to
-    automatically generate all required sizes.
-  </p>
+<h3>Step 6: Change App Logo / Icon</h3>
+<p>
+For a React Native Expo project in 2026, the recommended app icon size is
+<strong>1024 × 1024 pixels</strong>. Expo uses this high-resolution image to
+automatically generate all required sizes.
+</p>
 
-  <pre><code>{
+<pre><code>{
   "expo": {
     "icon": "./assets/images/icon.png",
     "android": {
@@ -222,118 +253,105 @@
   }
 }</code></pre>
 
-  <div class="note">
-    Ensure all icon paths exist before running the build to avoid asset errors.
-  </div>
+<div class="note">
+  Ensure all icon paths exist before running the build to avoid asset errors.
+</div>
 
-  <h3>Step 7: Download APK</h3>
-  <p>
-    After the build completes:
-  </p>
-  <ul>
-    <li>Open the provided build link</li>
-    <li>Download the APK</li>
-    <li>Install it on a physical device or emulator</li>
-  </ul>
+<h3>Step 7: Download APK</h3>
+<ul>
+  <li>Open the provided build link</li>
+  <li>Download the APK</li>
+  <li>Install it on a physical device or emulator</li>
+</ul>
 
-  <h3>Step 4: Run Build Command</h3>
+<h3>Step 4: Run Build Command</h3>
 
-  <p><strong>Development APK</strong></p>
-  <pre><code>eas build --platform android --profile development</code></pre>
+<p><strong>Development APK</strong></p>
+<pre><code>eas build --platform android --profile development</code></pre>
 
-  <p><strong>Preview / Testing APK (Recommended)</strong></p>
-  <pre><code>eas build --platform android --profile preview</code></pre>
+<p><strong>Preview / Testing APK (Recommended)</strong></p>
+<pre><code>eas build --platform android --profile preview</code></pre>
 
-  <p><strong>Production AAB (Play Store)</strong></p>
-  <pre><code>eas build --platform android --profile production</code></pre>
+<p><strong>Production AAB (Play Store)</strong></p>
+<pre><code>eas build --platform android --profile production</code></pre>
 
-  <h3>Step 5: Download APK</h3>
-  <p>
-    After the build completes:
-  </p>
-  <ul>
-    <li>Open the provided build link</li>
-    <li>Download the APK</li>
-    <li>Install on device or emulator</li>
-  </ul>
+<h3>Step 5: Download APK</h3>
+<ul>
+  <li>Open the provided build link</li>
+  <li>Download the APK</li>
+  <li>Install on device or emulator</li>
+</ul>
 
-  <!-- LOCAL BUILD -->
-  <h2>4. Alternative: Local APK Build</h2>
+<h2>4. Alternative: Local APK Build</h2>
+<p>You can build APK locally without Expo cloud.</p>
+<pre><code>eas build --platform android --local</code></pre>
 
-  <p>
-    You can build APK locally without Expo cloud.
-  </p>
+<div class="note">
+  The APK will be available inside the <code>dist/</code> folder.
+</div>
 
-  <pre><code>eas build --platform android --local</code></pre>
+<h2>5. Problems Faced & Solutions</h2>
 
-  <div class="note">
-    The APK will be available inside the <code>dist/</code> folder.
-  </div>
+<div class="problem">
+<strong>Problem:</strong><br>
+Project config: Slug for project identified by "extra.eas.projectId"
+(mahsua-age-calculator) does not match the "slug" field (age-plus).
+<br><br>
+<strong>Solution:</strong>
+<ul>
+  <li><strong>Keep the Existing Project:</strong> Change slug back to
+    <code>mahsua-age-calculator</code> but keep the name as "Age +".</li>
+  <li><strong>Start a New Project:</strong> Delete the <code>projectId</code> line
+    from <code>app.json</code> and run the build again.</li>
+</ul>
+</div>
 
-  <!-- PROBLEMS -->
-  <h2>5. Problems Faced & Solutions</h2>
+<div class="problem">
+<strong>Problem:</strong> Android build failed with “Unknown error”<br>
+<strong>Solution:</strong>
+<pre><code>npx expo-doctor</code></pre>
+</div>
 
-  <div class="problem">
-    <strong>Problem:</strong> <pre><code>Project config: Slug for project identified by "extra.eas.projectId" (mahsua-age-calculator) does not match the "slug" field (age-plus). </code></pre>
-    <br />
-    <strong>Solution:</strong> Check Prebuild logs and run:
-<ol class="IaGLZe VimKh" jscontroller="xE4zce" jsuid="pb5qjb_1l" data-complete="true" data-processed="true"><li jscontroller="vsuOFb" jsuid="pb5qjb_1m" data-hveid="CAEICBAA" data-complete="true" data-sae="" style=""><span class="T286Pc" data-sfc-cp="" jscontroller="fly6D" jsuid="pb5qjb_1n" data-complete="true"><strong class="Yjhzub" jscontroller="zYmgkd" jsuid="pb5qjb_1o" data-complete="true">Keep the Existing Project:<!--Sv6Kpe[]--></strong> If you want to keep your project history, change the <code dir="ltr" class="o8j0Mc" jscontroller="PR9Qj" jsuid="pb5qjb_1p" data-complete="true" data-sae="" style="">slug<!--Sv6Kpe[]--></code> back to <code dir="ltr" class="o8j0Mc" jscontroller="PR9Qj" jsuid="pb5qjb_1q" data-complete="true" data-sae="" style="">mahsua-age-calculator<!--Sv6Kpe[]--></code> but keep the <code dir="ltr" class="o8j0Mc" jscontroller="PR9Qj" jsuid="pb5qjb_1r" data-complete="true" data-sae="" style="">name<!--Sv6Kpe[]--></code> as <code dir="ltr" class="o8j0Mc" jscontroller="PR9Qj" jsuid="pb5qjb_1s" data-complete="true" data-sae="" style="">"Age +"<!--Sv6Kpe[]--></code>. The name is what users see; the slug is just for internal Expo linking.<!--Sv6Kpe[]--></span><!--Sv6Kpe[]--></li><li jscontroller="vsuOFb" jsuid="pb5qjb_1t" data-hveid="CAEICBAB" data-complete="true" data-sae="" style=""><span class="T286Pc" data-sfc-cp="" jscontroller="fly6D" jsuid="pb5qjb_1u" data-complete="true"><strong class="Yjhzub" jscontroller="zYmgkd" jsuid="pb5qjb_1v" data-complete="true">Start a New Project:<!--Sv6Kpe[]--></strong> If you want a new project on your Expo dashboard, delete the <code dir="ltr" class="o8j0Mc" jscontroller="PR9Qj" jsuid="pb5qjb_1w" data-complete="true" data-sae="" style="">projectId<!--Sv6Kpe[]--></code> line from your <code dir="ltr" class="o8j0Mc" jscontroller="PR9Qj" jsuid="pb5qjb_1x" data-complete="true" data-sae="" style="">app.json<!--Sv6Kpe[]--></code> and run the build again. EAS will prompt you to create a new project for the new slug.<!--Sv6Kpe[]--></span><span jsuid="pb5qjb_1y" class="uJ19be notranslate" jsaction="rcuQ6b:&amp;pb5qjb_1y|npT2md" jscontroller="udAs2b" data-wiz-uids="pb5qjb_1z" data-complete="true"><span class="vKEkVd" data-animation-atomic="" data-wiz-attrbind="class=pb5qjb_1y/TKHnVd" data-sae="" style="">&nbsp;<button jsuid="pb5qjb_1z" tabindex="0" data-amic="true" data-icl-uuid="38a2987b-4af0-4a07-9a38-140d9f563e17" aria-label="View related links" class="rBl3me" jsaction="click:&amp;pb5qjb_1y|S9kKve;mouseenter:&amp;pb5qjb_1y|sbHm2b;mouseleave:&amp;pb5qjb_1y|Tx5Rb" data-wiz-attrbind="disabled=pb5qjb_1y/C5gNJc;aria-label=pb5qjb_1y/bOjMyf;class=pb5qjb_1y/UpSNec" data-ved="2ahUKEwjkr7HUwJ6SAxU7hGMGHf5qKugQye0OegYIAQgIEAI"><span class="wiMplc ofC0Ud"><svg style="margin-top: 3px;" fill="currentColor" width="12px" height="12px" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></span></button></span><!--Sv6Kpe[[null,null,&quot;38a2987b-4af0-4a07-9a38-140d9f563e17&quot;,null,null,1,0,&quot;&quot;,&quot;&quot;]]--></span><!--Sv6Kpe[]--></li><!--Sv6Kpe[]--></ol>
-  </div>
+<div class="problem">
+<strong>Problem:</strong> Used wrong command <code>expo doctor</code><br>
+<strong>Solution:</strong>
+<pre><code>npx expo-doctor</code></pre>
+</div>
 
-  <div class="problem">
-    <strong>Problem:</strong> Android build failed with “Unknown error”  
-    <br />
-    <strong>Solution:</strong> Check Prebuild logs and run:
-    <pre><code>npx expo-doctor</code></pre>
-  </div>
+<div class="problem">
+<strong>Problem:</strong> Missing app icon<br>
+<strong>Solution:</strong> Create <code>assets/icon.png</code><br>
+Recommended size: <strong>1024 × 1024</strong>
+</div>
 
-  <div class="problem">
-    <strong>Problem:</strong> Used wrong command <code>expo doctor</code>  
-    <br />
-    <strong>Solution:</strong> Use:
-    <pre><code>npx expo-doctor</code></pre>
-  </div>
+<div class="problem">
+<strong>Problem:</strong> <code>.expo</code> directory warning<br>
+<strong>Solution:</strong> Add to <code>.gitignore</code>:
+<pre><code>.expo/</code></pre>
+</div>
 
-  <div class="problem">
-    <strong>Problem:</strong> Missing app icon  
-    <br />
-    <strong>Solution:</strong> Create:
-    <pre><code>assets/icon.png</code></pre>
-    Recommended size: <strong>1024 × 1024</strong>
-  </div>
+<div class="problem">
+<strong>Problem:</strong> APK size ~60 MB<br>
+<strong>Explanation:</strong> Normal for Expo apps. AAB size is much smaller.
+</div>
 
-  <div class="problem">
-    <strong>Problem:</strong> `.expo` directory warning  
-    <br />
-    <strong>Solution:</strong> Add to `.gitignore`:
-    <pre><code>.expo/</code></pre>
-  </div>
-
-  <div class="problem">
-    <strong>Problem:</strong> APK size ~60 MB  
-    <br />
-    <strong>Explanation:</strong> Normal for Expo apps. AAB size is much smaller.
-  </div>
-
-  <!-- CONCLUSION -->
-  <h2>6. Conclusion</h2>
-  <ul>
-    <li>EAS Build is mandatory for Expo Android builds</li>
-    <li>Most errors come from configuration or missing assets</li>
-    <li>Always run <code>expo-doctor</code> before building</li>
-    <li>Use APK for testing, AAB for Play Store</li>
-  </ul>
+<h2>6. Conclusion</h2>
+<ul>
+  <li>EAS Build is mandatory for Expo Android builds</li>
+  <li>Most errors come from configuration or missing assets</li>
+  <li>Always run <code>expo-doctor</code> before building</li>
+  <li>Use APK for testing, AAB for Play Store</li>
+</ul>
 
 </main>
 
 <footer>
-  Expo APK Build Documentation • Simple HTML Version
+  © Copyright by
+  <a href="https://technology.mahsua.com/pages/opensource.html" target="_blank">
+    Mahsua Technology Opensource
+  </a><br>
+  Free Open Source Guides for Developers
 </footer>
-
-<script>
-  // Reserved for future enhancements (copy buttons, dark mode, etc.)
-  console.log("Expo APK documentation loaded");
-</script>
 
 </body>
 </html>
